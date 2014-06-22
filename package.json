@@ -1,6 +1,15 @@
 {
-  "name": "func",
+  "name": "super-fn",
   "private": true,
   "version": "0.0.0",
-  "dependencies": {}
+  "dependencies": {
+    "poser": "^1.1.3"
+  },
+  "description": "Functions with superpowers.",
+  "main": "func.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT"
 }

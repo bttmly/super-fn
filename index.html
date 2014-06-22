@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Mocha Spec Runner</title>
-  <link rel="stylesheet" href="bower_components/mocha/mocha.css">
+  <link rel="stylesheet" href="components/mocha/mocha.css">
 </head>
 <body>
   <div id="mocha"></div>
-  <script src="bower_components/mocha/mocha.js"></script>
+  <script src="components/mocha/mocha.js"></script>
   <script>mocha.setup('')</script>
-  <script src="bower_components/chai/chai.js"></script>
+  <script src="components/chai/chai.js"></script>
   <script>
     var assert = chai.assert;
     var expect = chai.expect;
@@ -18,7 +18,9 @@
   </script>
 
   <!-- include source files here... -->
-  <script src="func.js"></script>
+  <script src="./super-fn-browser.js"></script>
+
+  <script src="./src/lodash.functions.js"></script>
 
   <!-- include spec files here... -->
   <script src="spec/func.js"></script>
