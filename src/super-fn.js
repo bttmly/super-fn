@@ -5,10 +5,19 @@ module.exports = ( function() {
 
   var _ = require( "./lodash.functions.min.js" );
 
+  function isFunction( value ) {
+    return typeof value === "function";
+  }
+
   function factory( fn ) {
+    if ( !isFunction( value ) ) {
+      throw new TypeError( "The SuperFn factory needs a function." );
+    }
+
     var func = function() {
       return fn.apply( this, arguments );
     };
+    
     func._original = fn;
     mixin( func, methods );
     members.push( func );
@@ -49,6 +58,13 @@ module.exports = ( function() {
   ];
 
   var methods = {};
+
+  methods.bind = function( context ) {
+    var self = this;
+    return factory( function() {
+      return self.apply( arguments, context );
+    });
+  }
 
   methodNames.forEach( function( fn ) {
     methods[fn] = function() {

@@ -56,7 +56,7 @@ module.exports = ( function() {
   }
 
   function unshiftArgs( argsObj, item ) {
-    var arr = slice( argsObj )
+    var arr = slice( argsObj );
     arr.unshift( item );
     return arr;
   }
@@ -88,7 +88,7 @@ module.exports = ( function() {
 
   factory.addMethod = function( name, value, noUpdate ) {
 
-    // can't overwrite existing methods.
+    // won't overwrite existing methods.
     if ( name in methods ) {
       throw new Error( "A method already exists with that name." );
     }

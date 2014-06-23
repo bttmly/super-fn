@@ -218,7 +218,7 @@
       }
     });
 
-    _.times(2, function(index) {
+    times(2, function(index) {
       asyncTest('should trigger a call when invoked repeatedly' + (index ? ' and `leading` is `false`' : ''), 1, function() {
         if (!(isRhino && isModularize)) {
           var count = 0,
@@ -272,12 +272,12 @@
 
     test('should support a `leading` option', 4, function() {
       if (!(isRhino && isModularize)) {
-        _.each([true, { 'leading': true }], function(options) {
+        each([true, { 'leading': true }].forEach( function(options) {
           var withLeading = f( identity ).throttle( 32, options );
           strictEqual(withLeading('a'), 'a');
         });
 
-        _.each([false, { 'leading': false }], function(options) {
+        ([false, { 'leading': false }].forEach( function(options) {
           var withoutLeading = f( identity ).throttle( 32, options );
           strictEqual(withoutLeading('a'), undefined);
         });
@@ -377,7 +377,7 @@
 
       asyncTest('subsequent debounced calls return the last `func` result', 2, function() {
         if (!(isRhino && isModularize)) {
-          var debounced = f( identity, 32 );
+          var debounced = f( identity ).debounce( 32 );
           debounced('x');
 
           setTimeout(function() {
@@ -397,7 +397,7 @@
 
       asyncTest('subsequent "immediate" debounced calls return the last `func` result', 2, function() {
         if (!(isRhino && isModularize)) {
-          var debounced = _.debounce(_.identity, 32, true),
+          var debounced = f(identity).debounce(32, true),
               result = [debounced('x'), debounced('y')];
 
           deepEqual(result, ['x', 'x']);
@@ -418,10 +418,10 @@
         if (!(isRhino && isModularize)) {
           var count = 0;
 
-          var debounced = _.debounce(function(value) {
+          var debounced = f(function(value) {
             count++;
             return value;
-          }, 32, {});
+          }).debounce(32, {});
 
           strictEqual(debounced('x'), undefined);
 
@@ -441,11 +441,11 @@
           var withLeading,
               counts = [0, 0, 0];
 
-          _.each([true, { 'leading': true }], function(options, index) {
-            var debounced = _.debounce(function(value) {
+          [true, { 'leading': true }].forEach(function(options, index) {
+            var debounced = f(function(value) {
               counts[index]++;
               return value;
-            }, 32, options);
+            }).debounce(32, options);
 
             if (index == 1) {
               withLeading = debounced;
@@ -453,14 +453,14 @@
             strictEqual(debounced('x'), 'x');
           });
 
-          _.each([false, { 'leading': false }], function(options) {
-            var withoutLeading = _.debounce(_.identity, 32, options);
+          [false, { 'leading': false }].forEach(function(options) {
+            var withoutLeading = f(identity).debounce(32, options);
             strictEqual(withoutLeading('x'), undefined);
           });
 
-          var withLeadingAndTrailing = _.debounce(function() {
+          var withLeadingAndTrailing = f(function() {
             counts[2]++;
-          }, 32, { 'leading': true });
+          }).debounce(32, { 'leading': true });
 
           withLeadingAndTrailing();
           withLeadingAndTrailing();
@@ -487,15 +487,15 @@
           var withCount = 0,
               withoutCount = 0;
 
-          var withTrailing = _.debounce(function(value) {
+          var withTrailing = f(function(value) {
             withCount++;
             return value;
-          }, 32, { 'trailing': true });
+          }).debounce(32, { 'trailing': true });
 
-          var withoutTrailing = _.debounce(function(value) {
+          var withoutTrailing = f(function(value) {
             withoutCount++;
             return value;
-          }, 32, { 'trailing': false });
+          }).debounce(32, { 'trailing': false });
 
           strictEqual(withTrailing('x'), undefined);
           strictEqual(withoutTrailing('x'), undefined);
@@ -518,13 +518,13 @@
               withCount = 0,
               withoutCount = 0;
 
-          var withMaxWait = _.debounce(function() {
+          var withMaxWait = f(function() {
             withCount++;
-          }, 64, { 'maxWait': 128 });
+          }).debounce(64, { 'maxWait': 128 });
 
-          var withoutMaxWait = _.debounce(function() {
+          var withoutMaxWait = f(function() {
             withoutCount++;
-          }, 96);
+          }).debounce(96);
 
           var start = +new Date;
           while ((new Date - start) < limit) {
@@ -548,9 +548,9 @@
         if (!(isRhino && isModularize)) {
           var count = 0;
 
-          var debounced = _.debounce(function() {
+          var debounced = f(function() {
             count++;
-          }, 32, { 'maxWait': 64 });
+          }).debounce(32, { 'maxWait': 64 });
 
           debounced();
 
@@ -571,11 +571,11 @@
               count = 0,
               object = {};
 
-          var debounced = _.debounce(function(value) {
+          var debounced = f(function(value) {
             args = [this];
             push.apply(args, arguments);
             return ++count != 2;
-          }, 32, { 'leading': true, 'maxWait': 64 });
+          }).debounce(32, { 'leading': true, 'maxWait': 64 });
 
           while (true) {
             if (!debounced.call(object, 'a')) {
@@ -603,7 +603,7 @@
     asyncTest('should throttle a function', 2, function() {
       if (!(isRhino && isModularize)) {
         var count = 0;
-        var throttled = _.throttle(function() { count++; }, 32);
+        var throttled = f(function() { count++; }.throttle(32);
 
         throttled();
         throttled();
@@ -625,7 +625,7 @@
 
     asyncTest('subsequent calls should return the result of the first call', 5, function() {
       if (!(isRhino && isModularize)) {
-        var throttled = _.throttle(_.identity, 32),
+        var throttled = f(identity).throttle(32),
             result = [throttled('a'), throttled('b')];
 
         deepEqual(result, ['a', 'a']);
@@ -646,44 +646,44 @@
       }
     });
 
-    asyncTest('should clear timeout when `func` is called', 1, function() {
-      if (!isModularize) {
-        var callCount = 0,
-            dateCount = 0;
+    // asyncTest('should clear timeout when `func` is called', 1, function() {
+    //   if (!isModularize) {
+    //     var callCount = 0,
+    //         dateCount = 0;
 
-        var getTime = function() {
-          return ++dateCount < 3 ? +new Date : Infinity;
-        };
+    //     var getTime = function() {
+    //       return ++dateCount < 3 ? +new Date : Infinity;
+    //     };
 
-        var lodash = _.runInContext(_.assign({}, root, {
-          'Date': function() {
-            return { 'getTime': getTime, 'valueOf': getTime };
-          }
-        }));
+    //     var lodash = _.runInContext(_.assign({}, root, {
+    //       'Date': function() {
+    //         return { 'getTime': getTime, 'valueOf': getTime };
+    //       }
+    //     }));
 
-        var throttled = lodash.throttle(function() {
-          callCount++;
-        }, 32);
+    //     var throttled = lodash.throttle(function() {
+    //       callCount++;
+    //     }, 32);
 
-        throttled();
-        throttled();
-        throttled();
+    //     throttled();
+    //     throttled();
+    //     throttled();
 
-        setTimeout(function() {
-          strictEqual(callCount, 2);
-          QUnit.start();
-        }, 64);
-      }
-      else {
-        skipTest();
-        QUnit.start();
-      }
-    });
+    //     setTimeout(function() {
+    //       strictEqual(callCount, 2);
+    //       QUnit.start();
+    //     }, 64);
+    //   }
+    //   else {
+    //     skipTest();
+    //     QUnit.start();
+    //   }
+    // });
 
     asyncTest('should not trigger a trailing call when invoked once', 2, function() {
       if (!(isRhino && isModularize)) {
         var count = 0,
-            throttled = _.throttle(function() { count++; }, 32);
+            throttled = f(function() { count++; }).throttle(32);
 
         throttled();
         strictEqual(count, 1);
@@ -699,16 +699,16 @@
       }
     });
 
-    _.times(2, function(index) {
+    times(2, function(index) {
       asyncTest('should trigger a call when invoked repeatedly' + (index ? ' and `leading` is `false`' : ''), 1, function() {
         if (!(isRhino && isModularize)) {
           var count = 0,
               limit = (argv || isPhantom) ? 1000 : 320,
               options = index ? { 'leading': false } : {};
 
-          var throttled = _.throttle(function() {
+          var throttled = f(function() {
             count++;
-          }, 32, options);
+          }).throttle(32, options);
 
           var start = +new Date;
           while ((new Date - start) < limit) {
@@ -732,10 +732,10 @@
       if (!(isRhino && isModularize)) {
         var count = 0;
 
-        var throttled = _.throttle(function(value) {
+        var throttled = f(function(value) {
           count++;
           return value;
-        }, 32, {});
+        }).throttle( 32, {});
 
         strictEqual(throttled('a'), 'a');
         strictEqual(throttled('b'), 'a');
@@ -753,13 +753,13 @@
 
     test('should support a `leading` option', 4, function() {
       if (!(isRhino && isModularize)) {
-        _.each([true, { 'leading': true }], function(options) {
-          var withLeading = _.throttle(_.identity, 32, options);
+        [true, { 'leading': true }].forEach(function(options) {
+          var withLeading = f(identity).throttle(32, options);
           strictEqual(withLeading('a'), 'a');
         });
 
-        _.each([false, { 'leading': false }], function(options) {
-          var withoutLeading = _.throttle(_.identity, 32, options);
+        [false, { 'leading': false }].forEach(function(options) {
+          var withoutLeading = f(identity).throttle(32, options);
           strictEqual(withoutLeading('a'), undefined);
         });
       }
@@ -773,15 +773,15 @@
         var withCount = 0,
             withoutCount = 0;
 
-        var withTrailing = _.throttle(function(value) {
+        var withTrailing = f(function(value) {
           withCount++;
           return value;
-        }, 64, { 'trailing': true });
+        }).throttle(64, { 'trailing': true });
 
-        var withoutTrailing = _.throttle(function(value) {
+        var withoutTrailing = f(function(value) {
           withoutCount++;
           return value;
-        }, 64, { 'trailing': false });
+        }).throttle(64, { 'trailing': false });
 
         strictEqual(withTrailing('a'), 'a');
         strictEqual(withTrailing('b'), 'a');
@@ -805,9 +805,9 @@
       if (!(isRhino && isModularize)) {
         var count = 0;
 
-        var throttled = _.throttle(function() {
+        var throttled = f(function() {
           count++;
-        }, 64, { 'trailing': false });
+        }).throttle(64, { 'trailing': false });
 
         throttled();
         throttled();
@@ -833,11 +833,11 @@
 
   QUnit.module('lodash.debounce and lodash.throttle');
 
-  _.each(['debounce', 'throttle'], function(methodName) {
+  ['debounce', 'throttle'].forEach(function(methodName) {
     var func = _[methodName],
         isThrottle = methodName == 'throttle';
 
-    test('_.' + methodName + ' should not error for non-object `options` values', 1, function() {
+    test( methodName + ' should not error for non-object `options` values', 1, function() {
       var pass = true;
 
       try {
@@ -982,7 +982,8 @@
         return 'Hiya ' + formatted + '!';
       };
 
-      var welcome = _.compose(greet, format);
+      // var welcome = _.compose(greet, format);
+      var welcome = f(greet).compose(format);
       strictEqual(welcome('pebbles'), 'Hiya Penelope!');
     });
 
@@ -990,26 +991,30 @@
       notStrictEqual(_.compose(_.noop), _.noop);
     });
 
-    test('should return a noop function when no arguments are provided', 2, function() {
-      var composed = _.compose();
+    // Won't be able to replicate this behavior, skip test.
+    //
+    // test('should return a noop function when no arguments are provided', 2, function() {
+    //   var composed = _.compose();
 
-      try {
-        strictEqual(composed(), undefined);
-      } catch(e) {
-        ok(false);
-      }
-      notStrictEqual(composed, _.noop);
-    });
+    //   try {
+    //     strictEqual(composed(), undefined);
+    //   } catch(e) {
+    //     ok(false);
+    //   }
+    //   notStrictEqual(composed, _.noop);
+    // });
 
-    test('should return a wrapped value when chaining', 1, function() {
-      if (!isNpm) {
-        var actual = _(_.noop).compose();
-        ok(actual instanceof _);
-      }
-      else {
-        skipTest();
-      }
-    });
+    // Ditto.
+    //
+    // test('should return a wrapped value when chaining', 1, function() {
+    //   if (!isNpm) {
+    //     var actual = _(_.noop).compose();
+    //     ok(actual instanceof _);
+    //   }
+    //   else {
+    //     skipTest();
+    //   }
+    // });
   }());
 
   /*--------------------------------------------------------------------------*/
@@ -1017,66 +1022,72 @@
   QUnit.module('partial methods');
 
   _.each(['partial', 'partialRight'], function(methodName) {
-    var func = _[methodName],
+    // var func = _[methodName],
         isPartial = methodName == 'partial';
 
     test('`_.' + methodName + '` partially applies arguments', 1, function() {
-      var par = func(_.identity, 'a');
+      // var par = func(_.identity, 'a');
+      var par = f(identity)[methodName}("a");
       strictEqual(par(), 'a');
     });
 
     test('`_.' + methodName + '` creates a function that can be invoked with additional arguments', 1, function() {
       var expected = ['a', 'b'],
-          fn = function(a, b) { return [a, b]; },
-          par = func(fn, 'a');
+          fn = f(function(a, b) { return [a, b]; }),
+          // par = func(fn, 'a');
+          par = fn[methodName]("a");
 
       deepEqual(par('b'), isPartial ? expected : expected.reverse());
     });
 
     test('`_.' + methodName + '` works when there are no partially applied arguments and the created function is invoked without additional arguments', 1, function() {
-      var fn = function() { return arguments.length; },
-          par = func(fn);
+      var fn = f(function() { return arguments.length; }),
+          par = fn[methodName]();
 
       strictEqual(par(), 0);
     });
 
     test('`_.' + methodName + '` works when there are no partially applied arguments and the created function is invoked with additional arguments', 1, function() {
-      var par = func(_.identity);
+      // var par = func(_.identity);
+      var par = f( identity ).partial()
       strictEqual(par('a'), 'a');
     });
 
-    test('`_.' + methodName + '` should support placeholders', 4, function() {
-      if (!isModularize) {
-        var fn = function() { return slice.call(arguments); },
-            par = func(fn, _, 'b', _);
+    // not going to support placeholders at this point...
+    //
+    // test('`_.' + methodName + '` should support placeholders', 4, function() {
+    //   if (!isModularize) {
+    //     var fn = function() { return slice.call(arguments); },
+    //         par = func(fn, _, 'b', _);
 
-        deepEqual(par('a', 'c'), ['a', 'b', 'c']);
-        deepEqual(par('a'), ['a', 'b', undefined]);
-        deepEqual(par(), [undefined, 'b', undefined]);
+    //     deepEqual(par('a', 'c'), ['a', 'b', 'c']);
+    //     deepEqual(par('a'), ['a', 'b', undefined]);
+    //     deepEqual(par(), [undefined, 'b', undefined]);
 
-        if (isPartial) {
-          deepEqual(par('a', 'c', 'd'), ['a', 'b', 'c', 'd']);
-        } else {
-          par = func(fn, _, 'c', _);
-          deepEqual(par('a', 'b', 'd'), ['a', 'b', 'c', 'd']);
-        }
-      }
-      else {
-        skipTest(4);
-      }
-    });
+    //     if (isPartial) {
+    //       deepEqual(par('a', 'c', 'd'), ['a', 'b', 'c', 'd']);
+    //     } else {
+    //       par = func(fn, _, 'c', _);
+    //       deepEqual(par('a', 'b', 'd'), ['a', 'b', 'c', 'd']);
+    //     }
+    //   }
+    //   else {
+    //     skipTest(4);
+    //   }
+    // });
 
     test('`_.' + methodName + '` should not alter the `this` binding', 3, function() {
-      var fn = function() { return this.a; },
+      var fn = f(function() { return this.a; }),
           object = { 'a': 1 };
 
-      var par = func(_.bind(fn, object));
+      // var par = func(_.bind(fn, object));
+      var par = fn.bind( object )[methodName]()
       strictEqual(par(), object.a);
 
       par = _.bind(func(fn), object);
       strictEqual(par(), object.a);
 
-      object.par = func(fn);
+      object.par = fn[methodName]();
       strictEqual(object.par(), object.a);
     });
 

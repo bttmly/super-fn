@@ -1,20 +1,50 @@
 /* global func, describe, it, expect, should */
 
-describe('func()', function () {
-  'use strict';
+var methodNames = [
+  "throttle",
+  "debounce",
+  "curry",
+  "partial",
+  "partialRight",
+  "compose",
+  "delay",
+  "defer",
+  "memoize"
+];
 
-  it('exists', function () {
-    expect(func).to.be.a('function');
+function noop() {}
 
+function add( a, b ) {
+  return a + b;
+}
+
+describe("superFn()", function() {
+  "use strict";
+
+  it( "exists", function() {
+    expect( superFn ).to.be.a("function");
   });
 
-  it('does something', function () {
-    expect(true).to.equal(false);
+  it( "returns a function", function() {
+    expect( superFn( add ) ).to.be.a( "function" );
   });
 
-  it('does something else', function () {
-    expect(true).to.equal(false);
+  it( "throws when it doesn't get a function", function() {
+    expect( superFn( {} ) ).to.throw( TypeError );
   });
 
-  // Add more assertions here
+  it( "has the methods 'throttle', 'debounce', 'curry', 'partial', 'partialRight', 'compose', 'delay', 'defer', and 'memoize'.", function() {
+    var fNoop = superFn( noop );
+    expect( 
+      methodNames.every( function( method ) {
+        if ( typeof fNoop[method] === "function" ) {
+          return true;
+        }
+        return false
+      })
+    ).to.be.true;
+  });
+  
 });
+
+describe( "throttle" )
